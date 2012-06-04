@@ -807,6 +807,7 @@ public class Warzone {
 			}
 			War.war.msg(player, "Your inventory is in storage until you use '/war leave'.");
 			this.respawnPlayer(lowestNoOfPlayers, player);
+			ModifyPermissions.removePermissions(player);
 			for (Team team : this.teams) {
 				team.teamcast("" + player.getName() + " joined team " + lowestNoOfPlayers.getName() + ".");
 			}
