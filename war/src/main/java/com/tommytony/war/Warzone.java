@@ -490,6 +490,9 @@ public class Warzone {
 																playerTitle,
 																player.getLevel(),
 																player.getExp()));
+		
+		// Change permissions
+		ModifyPermissions.applyModifications(player);
 	}
 
 	public void restorePlayerState(Player player) {
@@ -510,6 +513,9 @@ public class Warzone {
 				SpoutManager.getPlayer(player).setTitle(originalState.getPlayerTitle());
 			}
 		}
+		
+		// Restore permissions
+		ModifyPermissions.clearModifications(player);
 	}
 
 	private void playerInvFromInventoryStash(PlayerInventory playerInv, PlayerState originalContents) {
@@ -807,7 +813,6 @@ public class Warzone {
 			}
 			War.war.msg(player, "Your inventory is in storage until you use '/war leave'.");
 			this.respawnPlayer(lowestNoOfPlayers, player);
-			ModifyPermissions.removePermissions(player);
 			for (Team team : this.teams) {
 				team.teamcast("" + player.getName() + " joined team " + lowestNoOfPlayers.getName() + ".");
 			}
@@ -1044,7 +1049,7 @@ public class Warzone {
 			if (War.war.isSpoutServer()) {
 				War.war.getSpoutDisplayer().updateStats(player);
 			}
-			ModifyPermissions.removeAttachment(player);
+			ModifyPermissions.clearModifications(player);
 			War.war.msg(player, "Your inventory is being restored.");
 			if (War.war.getWarHub() != null) {
 				War.war.getWarHub().resetZoneSign(this);

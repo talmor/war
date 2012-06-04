@@ -607,7 +607,7 @@ public class Team {
 	}
 
 	public InventoryBag getInventories() {
-		return this.inventories ;
+		return this.inventories;
 	}
 
 	public TeamConfigBag getTeamConfig() {

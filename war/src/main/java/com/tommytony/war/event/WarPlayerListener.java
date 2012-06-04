@@ -67,7 +67,7 @@ public class WarPlayerListener implements Listener {
 			if (War.war.isWandBearer(player)) {
 				War.war.removeWandBearer(player);
 			}
-			ModifyPermissions.removeAttachment(player);
+			ModifyPermissions.clearModifications(player);
 		}
 	}
 
@@ -211,7 +211,7 @@ public class WarPlayerListener implements Listener {
 				if (War.war.isWandBearer(player)) {
 					War.war.removeWandBearer(player);
 				}
-				ModifyPermissions.removeAttachment(player);
+				ModifyPermissions.clearModifications(player);
 			}
 		}
 	}
@@ -351,7 +351,6 @@ public class WarPlayerListener implements Listener {
 							zone.keepPlayerState(player);
 							War.war.msg(player, "Your inventory is in storage until you exit with '/war leave'.");
 							zone.respawnPlayer(event, team, player);
-							ModifyPermissions.removePermissions(player);
 							for (Team t : zone.getTeams()) {
 								t.teamcast("" + player.getName() + " joined team " + team.getName() + ".");
 							}

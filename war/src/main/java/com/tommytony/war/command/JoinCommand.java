@@ -108,7 +108,6 @@ public class JoinCommand extends AbstractWarCommand {
 			}
 
 			if (foundTeam) {
-				ModifyPermissions.removePermissions(player);
 				for (Team team : teams) {
 					team.teamcast("" + player.getName() + " joined " + team.getName());
 				}

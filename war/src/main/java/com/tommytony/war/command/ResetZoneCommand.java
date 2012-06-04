@@ -7,6 +7,7 @@ import com.tommytony.war.Team;
 import com.tommytony.war.War;
 import com.tommytony.war.Warzone;
 import com.tommytony.war.structure.ZoneLobby;
+import com.tommytony.war.utility.ModifyPermissions;
 
 
 public class ResetZoneCommand extends AbstractZoneMakerCommand {
@@ -42,6 +43,7 @@ public class ResetZoneCommand extends AbstractZoneMakerCommand {
 		}
 
 		zone.clearThieves();
+		ModifyPermissions.clearAllModifications();
 		for (Team team : zone.getTeams()) {
 			team.teamcast("The war has ended. " + zone.getTeamInformation() + " Resetting warzone " + zone.getName() + " and teams...");
 			for (Player p : team.getPlayers()) {
