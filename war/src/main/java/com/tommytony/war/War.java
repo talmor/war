@@ -70,6 +70,7 @@ public class War extends JavaPlugin {
 	
 	private final List<String> zoneMakerNames = new ArrayList<String>();
 	private final List<String> commandWhitelist = new ArrayList<String>();
+	private final List<String> removePermissions = new ArrayList<String>();
 	
 	private final List<Warzone> incompleteZones = new ArrayList<Warzone>();
 	private final List<String> zoneMakersImpersonatingPlayers = new ArrayList<String>();
@@ -198,6 +199,9 @@ public class War extends JavaPlugin {
 		this.getDefaultInventories().setReward(reward);
 		
 		this.getCommandWhitelist().add("who");
+		this.getRemovePermissions().add("nocheat.checks.runfly");
+		this.getRemovePermissions().add("essentials.item");
+		this.getRemovePermissions().add("essentials.gamemode");
 		this.getZoneMakerNames().add("tommytony");
 		
 		// Add constants
@@ -844,6 +848,9 @@ public class War extends JavaPlugin {
 
 	public List<String> getCommandWhitelist() {
 		return this.commandWhitelist;
+	}
+	public List<String> getRemovePermissions() {
+		return this.removePermissions;
 	}
 
 	public boolean inAnyWarzoneLobby(Location location) {
