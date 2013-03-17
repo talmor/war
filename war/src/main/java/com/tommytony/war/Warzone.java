@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -320,6 +321,13 @@ public class Warzone {
 			}
 			this.lobby.initialize();
 		}
+		War.war.getServer().broadcastMessage("Iniciando temporizadores");
+		// reset timers
+		War.war.getServer().getScheduler().scheduleSyncDelayedTask(War.war, new Runnable() {
+			   public void run() {
+			       War.war.getServer().broadcastMessage("Un minuto!!!");
+			   }
+			}, 20L*60L);
 
 		this.flagThieves.clear();
 		this.bombThieves.clear();
@@ -340,6 +348,8 @@ public class Warzone {
 			// omnomnomnom
 			entity.remove();
 		}
+		
+		
 	}
 
 	public void endRound() {
