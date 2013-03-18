@@ -339,7 +339,7 @@ public class War extends JavaPlugin {
 		ItemStack copiedStack = new ItemStack(originalStack.getType(), originalStack.getAmount(), originalStack.getDurability(), new Byte(originalStack.getData().getData()));
 		copiedStack.setDurability(originalStack.getDurability());
 		copyEnchantments(originalStack, copiedStack);	
-		
+		if (originalStack.hasItemMeta()) copyMetadata(originalStack, copiedStack);
 		return copiedStack;
 	}
 	
@@ -348,6 +348,10 @@ public class War extends JavaPlugin {
 			int level = originalStack.getEnchantments().get(enchantment);
 			safelyEnchant(copiedStack, enchantment, level);
 		}
+	}
+	
+	public void copyMetadata(ItemStack originalStack, ItemStack copiedStack) {
+		copiedStack.setItemMeta(originalStack.getItemMeta().clone());
 	}
 	
 	public void safelyEnchant(ItemStack target, Enchantment enchantment, int level) {

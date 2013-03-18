@@ -3,16 +3,20 @@ package com.tommytony.war.mapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.tommytony.war.War;
+import com.tommytony.war.utility.ItemSerializable;
 
 public class LoadoutYmlMapper {
-	
+
 	public static void fromConfigToLoadouts(ConfigurationSection config, HashMap<String, HashMap<Integer, ItemStack>> loadouts) {
 		List<String> loadoutNames = config.getStringList("names");
 		loadouts.clear();
@@ -22,20 +26,20 @@ public class LoadoutYmlMapper {
 			loadouts.put(name, newLoadout);
 		}
 	}
-	
+
 	public static void fromConfigToLoadout(ConfigurationSection config, HashMap<Integer, ItemStack> loadout, String loadoutName) {
 		List<Integer> slots = config.getIntegerList(loadoutName + ".slots");
 		for (Integer slot : slots) {
 			String prefix = loadoutName + "." + slot + ".";
-			
+
 			int id = config.getInt(prefix + "id");
-			byte data = (byte)config.getInt(prefix + "data");
+			byte data = (byte) config.getInt(prefix + "data");
 			int amount = config.getInt(prefix + "amount");
-			short durability = (short)config.getInt(prefix + "durability");
-			
+			short durability = (short) config.getInt(prefix + "durability");
+
 			ItemStack stack = new ItemStack(id, amount, durability, data);
 			stack.setDurability(durability);
-			
+
 			if (config.contains(prefix + "enchantments")) {
 				List<String> enchantmentStringList = config.getStringList(prefix + "enchantments");
 				for (String enchantmentString : enchantmentStringList) {
@@ -47,35 +51,44 @@ public class LoadoutYmlMapper {
 					}
 				}
 			}
-			
+
+			try {
+				if (config.contains(prefix + "ItemMeta")) {
+					stack.setItemMeta((ItemMeta) config.get(prefix + "ItemMeta"));
+					War.war.log("Reading Item Metadata",Level.INFO);
+				}
+			} catch (Exception e) {
+				War.war.log("Error reading ItemMeta", Level.SEVERE);
+			}
+
 			loadout.put(slot, stack);
 		}
 	}
-	
+
 	public static void fromLoadoutsToConfig(HashMap<String, HashMap<Integer, ItemStack>> loadouts, ConfigurationSection section) {
 		List<String> sortedNames = sortNames(loadouts);
-		
+
 		section.set("names", sortedNames);
 		for (String name : sortedNames) {
 			fromLoadoutToConfig(name, loadouts.get(name), section);
 		}
 	}
-	
+
 	public static List<String> sortNames(HashMap<String, HashMap<Integer, ItemStack>> loadouts) {
 		List<String> sortedNames = new ArrayList<String>();
-		
+
 		// default comes first
 		if (loadouts.containsKey("default")) {
 			sortedNames.add("default");
 		}
-		
+
 		for (String name : loadouts.keySet()) {
 			if (!name.equals("default")) {
 				sortedNames.add(name);
 			}
 		}
-		
-		return sortedNames; 
+
+		return sortedNames;
 	}
 
 	private static List<Integer> toIntList(Set<Integer> keySet) {
@@ -88,25 +101,19 @@ public class LoadoutYmlMapper {
 
 	public static void fromLoadoutToConfig(String loadoutName, HashMap<Integer, ItemStack> loadout, ConfigurationSection section) {
 		ConfigurationSection loadoutSection = section.createSection(loadoutName);
-		
+
 		if (loadoutSection != null) {
 			loadoutSection.set("slots", toIntList(loadout.keySet()));
 			for (Integer slot : loadout.keySet()) {
 				ConfigurationSection slotSection = loadoutSection.createSection(slot.toString());
 				ItemStack stack = loadout.get(slot);
-				
+
 				slotSection.set("id", stack.getTypeId());
 				slotSection.set("data", stack.getData().getData());
 				slotSection.set("amount", stack.getAmount());
 				slotSection.set("durability", stack.getDurability());
-	
-				if (stack.getEnchantments().keySet().size() > 0) {
-					List<String> enchantmentStringList = new ArrayList<String>();
-					for (Enchantment enchantment : stack.getEnchantments().keySet()) {
-						int level = stack.getEnchantments().get(enchantment);
-						enchantmentStringList.add(enchantment.getId() + "," + level);
-					}
-					slotSection.set("enchantments", enchantmentStringList);
+				if (stack.hasItemMeta()) {
+					slotSection.set("ItemMeta", stack.getItemMeta());
 				}
 			}
 		}
