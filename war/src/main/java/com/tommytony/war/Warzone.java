@@ -322,13 +322,6 @@ public class Warzone {
 			}
 			this.lobby.initialize();
 		}
-		War.war.getServer().broadcastMessage("Iniciando temporizadores");
-		// reset timers
-		War.war.getServer().getScheduler().scheduleSyncDelayedTask(War.war, new Runnable() {
-			   public void run() {
-			       War.war.getServer().broadcastMessage("Un minuto!!!");
-			   }
-			}, 20L*60L);
 
 		this.flagThieves.clear();
 		this.bombThieves.clear();
